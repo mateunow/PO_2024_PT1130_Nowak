@@ -35,6 +35,7 @@ class Vector2dTest {
         //then
         assertFalse(vector1.precedes(vector2));
         assertTrue(vector1.precedes(vector3));
+        //tu powinno być 9 testów dla każdego
     }
     @Test
     void vector2dFollowsOther(){
