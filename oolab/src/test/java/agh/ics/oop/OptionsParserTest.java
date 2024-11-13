@@ -13,58 +13,58 @@ class OptionsParserTest {
     @Test
     void correctDirectionsInMoveDirection(){
         //when
-        String[] input = {"f", "b", "r", "l"};
-        MoveDirection[] expected = {
+        String[] input = {"f", "f","b", "r", "l"};
+        List<MoveDirection> expected = List.of(
+                MoveDirection.FORWARD,
                 MoveDirection.FORWARD,
                 MoveDirection.BACKWARD,
                 MoveDirection.RIGHT,
-                MoveDirection.LEFT
-        };
+                MoveDirection.LEFT);
+        ;
 
         //then
-        assertArrayEquals(expected, OptionsParser.parse(input));
+        assertEquals(expected, OptionsParser.parse(input));
 
     }
     @Test
     void mixValidAndInvalidDirections() {
         //when
         String[] input = {"f", "x", "a", "l", "b"};
-        MoveDirection[] expected = {
+        List<MoveDirection> expected = List.of(
                 MoveDirection.FORWARD,
                 MoveDirection.LEFT,
-                MoveDirection.BACKWARD
-        };
+                MoveDirection.BACKWARD);
 
         //then
-        assertArrayEquals(expected, OptionsParser.parse(input));
+        assertEquals(expected, OptionsParser.parse(input));
     }
     @Test
     void onlyInvalidDirections() {
         //when
         String[] input = {"y", "x", "a"};
-        MoveDirection[] expected = {};
+        List<MoveDirection> expected = List.of();
 
         //then
-        assertArrayEquals(expected, OptionsParser.parse(input));
+        assertEquals(expected, OptionsParser.parse(input));
     }
 
     @Test
     void EmptyInput() {
         //when
         String[] input = {""};
-        MoveDirection[] expected = {};
+        List<MoveDirection> expected = List.of();
 
         //then
-        assertArrayEquals(expected, OptionsParser.parse(input));
+        assertEquals(expected, OptionsParser.parse(input));
     }
 
     @Test
     void singleDirection () {
         //when
         String[] input = {"f"};
-        MoveDirection[] expected = {MoveDirection.FORWARD};
+        List<MoveDirection> expected = List.of(MoveDirection.FORWARD);
 
         //then
-        assertArrayEquals(expected, OptionsParser.parse(input));
+        assertEquals(expected, OptionsParser.parse(input));
     }
 }
