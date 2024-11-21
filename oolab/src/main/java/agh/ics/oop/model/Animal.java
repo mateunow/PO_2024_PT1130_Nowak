@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-public class Animal {
+public class Animal implements WorldElement {
     private MapDirection direction;
     private Vector2d position;
     private final Vector2d maxPosition = new Vector2d(4,4);
@@ -11,7 +11,10 @@ public class Animal {
         this.direction = MapDirection.NORTH;
         this.position = startPosition;
     }
-
+    public Animal(MapDirection direction, Vector2d positions){
+        this.direction = direction;
+        this.position = positions;
+    }
     public void setPosition(Vector2d newPosition) {
         if (newPosition.precedes(maxPosition) && newPosition.follows(minPosition)) {
             this.position = newPosition;
