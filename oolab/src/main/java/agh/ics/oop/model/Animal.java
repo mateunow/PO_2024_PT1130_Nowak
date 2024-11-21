@@ -23,11 +23,17 @@ public class Animal {
     }
 
     public String toString() {
-        return position + "," + direction;
+        return switch (this.direction) {
+            case NORTH -> "^";
+            case SOUTH -> "v";
+            case WEST -> "<";
+            case EAST -> ">";
+            default -> throw new IllegalArgumentException("Invalid direction");
+        };
     }
 
 
-    public void move(MoveDirection direction) {
+    public void move(MoveDirection direction, MoveValidator validator) {
         Vector2d potentialNewPosition;
         switch (direction) {
             case RIGHT:
@@ -38,13 +44,13 @@ public class Animal {
                 break;
             case FORWARD:
                 potentialNewPosition = this.position.add(this.direction.toUnitVector());
-                if (potentialNewPosition.precedes(maxPosition) && potentialNewPosition.follows(minPosition)){
+                if (validator.canMoveTo(potentialNewPosition)) {
                     this.position = potentialNewPosition;
                 }
                 break;
             case BACKWARD:
                 potentialNewPosition = this.position.subtract(this.direction.toUnitVector());
-                if (potentialNewPosition.precedes(maxPosition) && potentialNewPosition.follows(minPosition)){
+                if (validator.canMoveTo(potentialNewPosition)) {
                     this.position = potentialNewPosition;
                 }
                 break;
