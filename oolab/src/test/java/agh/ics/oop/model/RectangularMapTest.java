@@ -86,10 +86,15 @@ class RectangularMapTest {
 
         //when
         map.place(animal);
+        System.out.println(map);
         map.move(animal, MoveDirection.FORWARD);
+        System.out.println(map);
         map.move(animal, MoveDirection.FORWARD);
+        System.out.println(map);
         map.move(animal, MoveDirection.FORWARD);
+        System.out.println(map);
         map.move(animal, MoveDirection.FORWARD);
+        System.out.println(map);
 
         //then
         assertEquals(new Vector2d(2, 4), animal.getPosition());
