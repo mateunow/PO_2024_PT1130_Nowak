@@ -5,7 +5,7 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RectangularMap implements WorldMap{
+public class RectangularMap implements WorldMap<Animal, Vector2d>{
 
     private final Map<Vector2d, Animal> animals = new HashMap<>();
     private final int height;
@@ -26,7 +26,7 @@ public class RectangularMap implements WorldMap{
     @Override
     public void move(Animal animal, MoveDirection direction) {
         Vector2d currentPosition = animal.getPosition();
-        animal.move(direction, this::canMoveTo);
+        animal.move(direction, this);
         animals.remove(currentPosition);
         animals.put(animal.getPosition(), animal);
     }

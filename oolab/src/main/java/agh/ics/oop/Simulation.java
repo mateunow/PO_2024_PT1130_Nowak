@@ -8,23 +8,23 @@ import agh.ics.oop.model.WorldMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation
+public class Simulation<T,P>
 {
-    private final List<Animal> animals = new ArrayList<>();
+    private final List<T> animals;
     private final List<MoveDirection> moves;
-    private final WorldMap world;
+    private final WorldMap<T,P> world;
 
 
-    public Simulation(List<Vector2d> positions, List<MoveDirection> moves, WorldMap world) {
+    public Simulation(List<T> animals, List<MoveDirection> moves, WorldMap<T,P> world) {
         this.moves = moves;
         this.world = world;
+        this.animals = animals;
 
-        for (Vector2d position : positions) {
-            Animal animal = new Animal();
-            animal.setPosition(position);
-            animals.add(animal);
+        for (T animal : animals) {
+            if (!world.place(animal)) {
+                throw new IllegalArgumentException("Nie można umieścić zwierzęcia na mapie: " + animal);
+            }
         }
-
 }
 
     public void run(){
@@ -36,7 +36,7 @@ public class Simulation
 
     }
 
-    public List<Animal> getAnimals() {
+    public List<T> getAnimals() {
         return List.copyOf(animals);
     }
 }
