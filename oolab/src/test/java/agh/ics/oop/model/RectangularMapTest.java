@@ -1,8 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.exeptions.IncorrectPositionException;
 import org.junit.jupiter.api.Test;
-
-import java.sql.SQLOutput;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +15,11 @@ class RectangularMapTest {
 
         //when
         animal.setPosition(new Vector2d(1, 1));
-        map.place(animal);
+        try {
+            assertTrue(map.place(animal));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
 
         //then
         assertFalse(map.canMoveTo(new Vector2d(3, 2)));
@@ -45,14 +48,23 @@ class RectangularMapTest {
         animal4.setPosition(new Vector2d(0, 4));
 
         //then
-        assertTrue(map.place(animal0));
+        try {
+            assertTrue(map.place(animal0));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
         assertFalse(map.canMoveTo(animal0.getPosition()));
         assertEquals(animal0, map.objectAt(new Vector2d(2, 2)));
-        assertFalse(map.place(animal1));
+        assertThrows(IncorrectPositionException.class, () -> map.place(animal1));
         assertNull(map.objectAt(new Vector2d(0, 3)));
-        assertTrue(map.place(animal2));
-        assertFalse(map.place(animal3));
-        assertFalse(map.place(animal4));
+        try {
+            assertTrue(map.place(animal2));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
+        assertThrows(IncorrectPositionException.class, () -> map.place(animal3));
+        assertThrows(IncorrectPositionException.class, () -> map.place(animal4));
+
     }
 
     @Test
@@ -65,8 +77,16 @@ class RectangularMapTest {
         //when
         animal0.setPosition(new Vector2d(1, 1));
         animal1.setPosition(new Vector2d(1, 2));
-        map.place(animal0);
-        map.place(animal1);
+        try {
+            assertTrue(map.place(animal0));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
+        try {
+            assertTrue(map.place(animal1));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
         //uznałem, że te 2 println-y pomogą zrozumieć innemu użytkownikowi na czym polega ten test
         System.out.println(map);
         map.move(animal0, MoveDirection.FORWARD);
@@ -85,7 +105,11 @@ class RectangularMapTest {
         Animal animal = new Animal();
 
         //when
-        map.place(animal);
+        try {
+            assertTrue(map.place(animal));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
         System.out.println(map);
         map.move(animal, MoveDirection.FORWARD);
         System.out.println(map);
@@ -135,7 +159,8 @@ class RectangularMapTest {
     @Test
     public void threeAnimalsTryingToReachOneCell() {
         //given
-        WorldMap map = new RectangularMap(5, 5);
+        RectangularMap map = new RectangularMap(5, 5);
+        map.register(new ConsoleMapDisplay());
         Animal animal0 = new Animal();
         Animal animal1 = new Animal();
         Animal animal2 = new Animal();
@@ -144,18 +169,28 @@ class RectangularMapTest {
         animal0.setPosition(new Vector2d(1, 1));
         animal1.setPosition(new Vector2d(2, 2));
         animal2.setPosition(new Vector2d(1, 3));
-        map.place(animal0);
-        map.place(animal1);
-        map.place(animal2);
-        System.out.println(map);
+        try {
+            assertTrue(map.place(animal0));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
+        try {
+            assertTrue(map.place(animal1));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
+        try {
+            assertTrue(map.place(animal2));
+        } catch (IncorrectPositionException e) {
+            fail("Unexpected exception: " + e.getMessage());
+        }
+
         map.move(animal0, MoveDirection.FORWARD);
         map.move(animal1, MoveDirection.LEFT);
         map.move(animal2, MoveDirection.BACKWARD);
-        System.out.println(map);
         map.move(animal0, MoveDirection.FORWARD);
         map.move(animal1, MoveDirection.FORWARD);
         map.move(animal2, MoveDirection.BACKWARD);
-        System.out.println(map);
 
         //then
         assertEquals(new Vector2d(1,2),animal0.getPosition());

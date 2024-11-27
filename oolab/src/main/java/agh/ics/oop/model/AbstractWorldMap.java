@@ -1,38 +1,49 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Boundary;
+import agh.ics.oop.exeptions.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
-    protected Vector2d upperRight = new Vector2d(0,0);
-    protected Vector2d lowerLeft = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
-    public final MapVisualizer mapVisualizer = new MapVisualizer(this);
+    protected final MapVisualizer mapVisualizer = new MapVisualizer(this);
     private final Map<Vector2d, Animal> animals = new HashMap<>();
+    private final HashSet<MapChangeListener> observers = new HashSet<>();
 
-    protected abstract Vector2d getUpperRight();
-    protected abstract Vector2d getLowerLeft();
+    public void register(MapChangeListener observer) {
+        observers.add(observer);
+    }
+    public void unregister(MapChangeListener observer) {
+        observers.remove(observer);
+    }
 
+    public void notifyObservers(String message) {
+        for (MapChangeListener observer : observers) {
+            observer.mapChanged(this, message);
+        }
+    }
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
         Vector2d currentPosition = animal.getPosition();
+        MapDirection currentDirection = animal.getDirection();
         animal.move(direction, this);
         animals.remove(currentPosition);
         animals.put(animal.getPosition(), animal);
+
+        if (!animal.getPosition().equals(currentPosition)) {
+            notifyObservers("Animal moved from " + currentPosition + " to " + animal.getPosition());
+        }
+        if (!animal.getDirection().equals(currentDirection)) {
+            notifyObservers("Animal turned from " + currentDirection + " to " + animal.getDirection());
+        }
     }
 
 
-    // Z tą metodą miałem problem odnośnie upperRight i lowerLeft. Nie znalazłem innego sposobu niż uzyskiwanie ich getterami
-    // z RectangularMap i GrassField. Jeśli istaniało lepsze rozwiązanie proszę o komentarz.
     @Override
     public boolean canMoveTo(Vector2d position) {
-        Vector2d upperRight = getUpperRight();
-        Vector2d lowerLeft = getLowerLeft();
-        return position.precedes(upperRight) && position.follows(lowerLeft) && !(objectAt(position) instanceof Animal);
+        return !(objectAt(position) instanceof Animal);
     }
 
     @Override
@@ -41,13 +52,14 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public boolean place(Animal animal) {
+    public boolean place(Animal animal) throws IncorrectPositionException{
         Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
             animals.put(position, animal);
+            notifyObservers("Animal placed at " + animal.getPosition() );
             return true;
         }
-        return false;
+        throw new IncorrectPositionException(position);
     }
 
     @Override
@@ -56,11 +68,15 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public List<WorldElement> getElements(){
-        List<WorldElement> worldElements = new ArrayList<>();
-        worldElements.addAll(animals.values());
+        List<WorldElement> worldElements = new ArrayList<>(animals.values());
         return worldElements;
     }
 
 
+    public abstract Boundary getCurrentBounds();
+
+    public String toString() {
+        return mapVisualizer.draw(getCurrentBounds().lowerLeft(), getCurrentBounds().upperRight());
+    }
 
 }

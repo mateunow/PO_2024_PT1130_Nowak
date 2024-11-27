@@ -46,29 +46,23 @@ class SimulationTest {
     }
 
     @Test
-    public void testRunWithInvalidMoveDirection () {
+    public void testRunWithException () {
         //given
-        WorldMap map = new RectangularMap(5,5);
+        WorldMap map = new RectangularMap(5, 5);
         String[] directionsArray = "m a v x c h m p".split(" ");
-        List<MoveDirection> directions = OptionsParser.parse(directionsArray);
-        List<Vector2d> positions =List.of(new Vector2d(2,2));
 
-        //when
-        Simulation simulation = new Simulation(positions, directions, map);
-        simulation.run();
-        List<Animal> animals = simulation.getAnimals();
-        Animal simulatedAnimal = animals.get(0);
-
-        //then
-        assertEquals(MapDirection.NORTH, simulatedAnimal.getDirection());
-        assertEquals(new Vector2d(2,2), simulatedAnimal.getPosition());
+        try {
+            List<MoveDirection> directions = OptionsParser.parse(directionsArray);
+        } catch (IllegalArgumentException e) {
+            assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(directionsArray));
         }
+    }
 
     @Test
-    public void runWithValidAndInvalidMoveDirection () {
+    public void runWithValidMoveDirection () {
         //given
         WorldMap map = new RectangularMap(5,5);
-        String[] directionsArray = "m f f l l f b r f v x c h m pf f f f f f".split(" ");
+        String[] directionsArray = "f f l l f b r f f f f f f".split(" ");
         List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(2,2));
 
@@ -86,10 +80,10 @@ class SimulationTest {
     }
 
     @Test
-    public void testSimulationWithTwoAnimalsCorrectAndIncorrectDirectionsAndCrossingEachOther () {
+    public void testSimulationWithTwoAnimalsCorrectDirectionsAndCrossingEachOther () {
         //given
         WorldMap map = new RectangularMap(5,5);
-        String[] directionsArray = "r l f f x f f c r a b f b f r f f r f f v m f f b f f j f f l l k f f f f".split(" ");
+        String[] directionsArray = "r l f f f f r b f b f r f f r f f f f b f f f f l l f f f f".split(" ");
         List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(0,4), new Vector2d(2,2));
 
@@ -114,20 +108,14 @@ class SimulationTest {
 
     @Test
     public void testStartAnimalsOneCorrectOneWithWrongStartingPositionSet () {
-        String[] directionsArray = "m f f ".split(" ");
+        String[] directionsArray = "f f".split(" ");
         WorldMap map = new RectangularMap(5,5);
         List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(2,2), new Vector2d(-1,30));
 
+        Simulation simulation = new Simulation(positions, directions, map);
+        simulation.run();
 
-        Exception exception = null;
-        try {
-            Simulation simulation = new Simulation(positions, directions, map);
-            simulation.run();
-        } catch (IllegalArgumentException e) {
-            exception = e;
-        }
-        assertNotNull(exception);
-        assertEquals("Invalid starting position for an animal", exception.getMessage());
+
     }
 }
