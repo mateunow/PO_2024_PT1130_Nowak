@@ -36,16 +36,21 @@ class OptionsParserTest {
                 MoveDirection.BACKWARD);
 
         //then
+        try {
         assertEquals(expected, OptionsParser.parse(input));
+        } catch (IllegalArgumentException e) {
+            assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(input));
+        }
     }
+
     @Test
     void onlyInvalidDirections() {
         //when
         String[] input = {"y", "x", "a"};
-        List<MoveDirection> expected = List.of();
 
         //then
-        assertEquals(expected, OptionsParser.parse(input));
+        assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(input));
+
     }
 
     @Test
@@ -55,7 +60,8 @@ class OptionsParserTest {
         List<MoveDirection> expected = List.of();
 
         //then
-        assertEquals(expected, OptionsParser.parse(input));
+        assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(input));
+
     }
 
     @Test
