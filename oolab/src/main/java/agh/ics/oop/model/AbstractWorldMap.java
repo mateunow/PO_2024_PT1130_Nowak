@@ -1,7 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.Boundary;
-import agh.ics.oop.exeptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
@@ -10,15 +10,17 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final MapVisualizer mapVisualizer = new MapVisualizer(this);
     private final Map<Vector2d, Animal> animals = new HashMap<>();
     private final HashSet<MapChangeListener> observers = new HashSet<>();
+    protected final int id = this.hashCode();
 
-    public void register(MapChangeListener observer) {
+
+    public final void registerObservers(MapChangeListener observer) {
         observers.add(observer);
     }
-    public void unregister(MapChangeListener observer) {
+    public final void unregisterObservers(MapChangeListener observer) {
         observers.remove(observer);
     }
 
-    public void notifyObservers(String message) {
+    protected void notifyObservers(String message) {
         for (MapChangeListener observer : observers) {
             observer.mapChanged(this, message);
         }
@@ -52,15 +54,16 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public boolean place(Animal animal) throws IncorrectPositionException{
+    public void place(Animal animal) throws IncorrectPositionException{
         Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
             animals.put(position, animal);
             notifyObservers("Animal placed at " + animal.getPosition() );
-            return true;
         }
+        else {
         throw new IncorrectPositionException(position);
-    }
+    }}
+
 
     @Override
     public WorldElement objectAt(Vector2d position) {
@@ -76,7 +79,12 @@ public abstract class AbstractWorldMap implements WorldMap {
     public abstract Boundary getCurrentBounds();
 
     public String toString() {
-        return mapVisualizer.draw(getCurrentBounds().lowerLeft(), getCurrentBounds().upperRight());
+        Boundary currentBounds = getCurrentBounds();
+        return mapVisualizer.draw(currentBounds.lowerLeft(), currentBounds.upperRight());
     }
 
+    @Override
+    public int getId() {
+        return id;
+    }
 }
