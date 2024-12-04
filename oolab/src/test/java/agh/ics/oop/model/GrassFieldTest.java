@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.exeptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,11 +19,8 @@ class GrassFieldTest {
         //when
         Animal animal = new Animal();
         animal.setPosition(position);
-        try {
-            assertTrue(grassField.place(animal));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal);});
+
 
         //then
         assertFalse(grassField.canMoveTo(position));
@@ -39,11 +36,9 @@ class GrassFieldTest {
         animal0.setPosition(position);
 
         //then
-        try {
-            assertTrue(grassField.place(animal0));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal0);});
+
+
         assertEquals(animal0, grassField.objectAt(position));
 
         //when
@@ -55,11 +50,7 @@ class GrassFieldTest {
         //when
         Animal animal2 = new Animal(MapDirection.NORTH, new Vector2d(30,11));
         //then
-        try {
-            assertTrue(grassField.place(animal2));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal2);});
         assertEquals(animal2, grassField.objectAt(new Vector2d(30,11)));
     }
 
@@ -83,11 +74,7 @@ class GrassFieldTest {
         //then
         assertTrue(grassField.isOccupied(grassPosition));
         assertFalse(grassField.objectAt(emptyPosition) instanceof Animal);
-        try {
-            assertTrue(grassField.place(animal));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal);});
         assertTrue(grassField.isOccupied(animalPosition));
     }
 
@@ -104,11 +91,7 @@ class GrassFieldTest {
         //when
         Vector2d animalPosition = new Vector2d(3, 3);
         Animal animal = new Animal(MapDirection.NORTH, animalPosition);
-        try {
-            assertTrue(grassField.place(animal));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal);});
 
         //then
         boolean somethingAtPosition = ((grassField.objectAt(grassPosition) instanceof Animal) || (grassField.objectAt(grassPosition) instanceof Grass));
@@ -125,11 +108,8 @@ class GrassFieldTest {
         Animal animal = new Animal(MapDirection.NORTH, startPosition);
 
         //when
-        try {
-            assertTrue(grassField.place(animal));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal);});
+
         grassField.move(animal, MoveDirection.RIGHT);
         grassField.move(animal, MoveDirection.FORWARD);
 
@@ -141,11 +121,7 @@ class GrassFieldTest {
 
         //when
         Animal animal1 = new Animal(MapDirection.NORTH, startPosition);
-        try {
-            assertTrue(grassField.place(animal1));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal1);});
         grassField.move(animal1, MoveDirection.RIGHT);
         grassField.move(animal1, MoveDirection.FORWARD);
 
@@ -165,11 +141,8 @@ class GrassFieldTest {
             grassUnderAnimal = 1;
         }
         Animal animal = new Animal(MapDirection.NORTH, new Vector2d(0, 0));
-        try {
-            assertTrue(grassField.place(animal));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal);});
+
 
 
         String mapRepresentation = grassField.toString();
@@ -185,11 +158,7 @@ class GrassFieldTest {
                 .orElseThrow(() -> new RuntimeException("No grass found"));
         System.out.println(grassField.toString()+ grassPosition);
         Animal animalOnGrass = new Animal(MapDirection.NORTH, grassPosition);
-        try {
-            assertTrue(grassField.place(animalOnGrass));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animalOnGrass);});
         String mapRepresentationAfterAddingAnimal = grassField.toString();
         long grassCountAfterAddingAnimal = mapRepresentationAfterAddingAnimal.chars().filter(ch -> ch == '*').count();
         assertEquals(9, grassCountAfterAddingAnimal + grassUnderAnimal);
@@ -208,11 +177,7 @@ class GrassFieldTest {
         assertTrue(grassField.objectAt(grassPosition) instanceof Grass);
         System.out.println(grassField.toString() + grassPosition);
         Animal animal = new Animal(MapDirection.NORTH, grassPosition);
-        try {
-            assertTrue(grassField.place(animal));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal);});
         assertTrue(grassField.isOccupied(grassPosition));
         assertTrue(grassField.objectAt(grassPosition) instanceof Animal);
         System.out.println(grassField.toString());
@@ -224,13 +189,9 @@ class GrassFieldTest {
     @Test
     public void animalTestToStringMovesOutOfGrassField(){
         GrassField grassField = new GrassField(10);
-        grassField.register(new ConsoleMapDisplay());
+        grassField.registerObservers(new ConsoleMapDisplay());
         Animal animal = new Animal(MapDirection.NORTH, new Vector2d(10, 10));
-        try {
-            assertTrue(grassField.place(animal));
-        } catch (IncorrectPositionException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
+        assertDoesNotThrow(() -> {grassField.place(animal);});
         grassField.move(animal, MoveDirection.BACKWARD);
         grassField.move(animal, MoveDirection.BACKWARD);
         grassField.move(animal, MoveDirection.BACKWARD);

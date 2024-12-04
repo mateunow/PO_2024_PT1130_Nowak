@@ -1,12 +1,12 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
-import agh.ics.oop.exeptions.IncorrectPositionException;
+import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation
+public class Simulation implements Runnable
 {
     private final List<Animal> animals;
     private final List<MoveDirection> moves;
@@ -21,9 +21,8 @@ public class Simulation
         for (Vector2d position : positions) {
             try {
                 Animal animal = new Animal(MapDirection.NORTH, position);
-                if (world.place(animal)) {
-                    this.animals.add(animal);
-                }
+                world.place(animal);
+                this.animals.add(animal);
             }
             catch (IncorrectPositionException e) {
                 System.out.println("Incorrect position " + e.getMessage());
