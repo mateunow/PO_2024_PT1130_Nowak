@@ -10,10 +10,10 @@ public class Simulation implements Runnable
 {
     private final List<Animal> animals;
     private final List<MoveDirection> moves;
-    private final WorldMap world;
+    private final AbstractWorldMap world;
 
 
-    public Simulation(List<Vector2d> positions, List<MoveDirection> moves, WorldMap world) {
+    public Simulation(List<Vector2d> positions, List<MoveDirection> moves, AbstractWorldMap world) {
         this.moves = moves;
         this.world = world;
         this.animals = new ArrayList<>();
@@ -32,11 +32,23 @@ public class Simulation implements Runnable
 }
 
     public void run(){
-        int animalsCount = animals.size();
-        for  (int i = 0; i < moves.size(); i++){
-            world.move(animals.get(i % animalsCount), moves.get(i));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+            //try i catch w celu poczekania na wyświetlenie początkowej mapy zanim
+//        pierwsze zwierze zrobi ruch
 
+        int animalsCount = animals.size();
+        for (int i = 0; i < moves.size(); i++) {
+            world.move(animals.get(i % animalsCount), moves.get(i));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public List<Animal> getAnimals() {

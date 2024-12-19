@@ -15,7 +15,7 @@ class SimulationTest {
     public void testRunWithValidMoveDirection () {
         //given
         List<MoveDirection> directions = new ArrayList<>();
-        WorldMap map = new RectangularMap(5,5);
+        AbstractWorldMap map = new RectangularMap(5,5);
         // W tym teście użyłem innego sposobu zapisu kierunków poruszania się, moim zdaniem jest on mniej czytelny, ponieważ
         // zajmuje zbyt wiele miejsca (w porównaniu do jednej linijki w innych testach), więc w następnych przykładach
         // nie używałem go. Proszę o komentarz czy decyzja była słuszna, czy trzeba sprawdzać również w ten sposób.
@@ -61,7 +61,7 @@ class SimulationTest {
     @Test
     public void runWithValidMoveDirection () {
         //given
-        WorldMap map = new RectangularMap(5,5);
+        AbstractWorldMap map = new RectangularMap(5,5);
         String[] directionsArray = "f f l l f b r f f f f f f".split(" ");
         List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(2,2));
@@ -82,7 +82,7 @@ class SimulationTest {
     @Test
     public void testSimulationWithTwoAnimalsCorrectDirectionsAndCrossingEachOther () {
         //given
-        WorldMap map = new RectangularMap(5,5);
+        AbstractWorldMap map = new RectangularMap(5,5);
         String[] directionsArray = "r l f f f f r b f b f r f f r f f f f b f f f f l l f f f f".split(" ");
         List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(0,4), new Vector2d(2,2));
@@ -109,7 +109,7 @@ class SimulationTest {
     @Test
     public void testStartAnimalsOneCorrectOneWithWrongStartingPositionSet () {
         String[] directionsArray = "f f".split(" ");
-        WorldMap map = new RectangularMap(5,5);
+        AbstractWorldMap map = new RectangularMap(5,5);
         List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(2,2), new Vector2d(-1,30));
 
