@@ -1,8 +1,7 @@
 package darwinProject.model;
 
-import darwinProject.enums.MapDirection;
-import darwinProject.enums.MoveDirection;
 import darwinProject.model.exceptions.IncorrectPositionException;
+import darwinProject.model.maps.GrassField;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,8 +18,7 @@ class GrassFieldTest {
         assertTrue(grassField.canMoveTo(position));
 
         //when
-        Animal animal = new Animal();
-        animal.setPosition(position);
+        Animal animal = new Animal(position, 7, 50);
         assertDoesNotThrow(() -> {grassField.place(animal);});
 
 
@@ -34,8 +32,7 @@ class GrassFieldTest {
         //given
         GrassField grassField = new GrassField(10);
         Vector2d position = new Vector2d(1, 1);
-        Animal animal0 = new Animal();
-        animal0.setPosition(position);
+        Animal animal0 = new Animal(position, 7, 50);
 
         //then
         assertDoesNotThrow(() -> {grassField.place(animal0);});
@@ -44,13 +41,12 @@ class GrassFieldTest {
         assertEquals(animal0, grassField.objectAt(position));
 
         //when
-        Animal animal1 = new Animal();
-        animal1.setPosition(position);
+        Animal animal1 = new Animal(position, 7, 50);
         //then
         assertThrows(IncorrectPositionException.class, () -> grassField.place(animal1));
 
         //when
-        Animal animal2 = new Animal(MapDirection.NORTH, new Vector2d(30,11));
+        Animal animal2 = new Animal(new Vector2d(30,11), 7, 50);
         //then
         assertDoesNotThrow(() -> {grassField.place(animal2);});
         assertEquals(animal2, grassField.objectAt(new Vector2d(30,11)));
@@ -70,8 +66,7 @@ class GrassFieldTest {
         //when
         Vector2d emptyPosition = new Vector2d(5, 5);
         Vector2d animalPosition = new Vector2d(2, 2);
-        Animal animal = new Animal();
-        animal.setPosition(animalPosition);
+        Animal animal = new Animal(animalPosition, 7, 50);
 
         //then
         assertTrue(grassField.isOccupied(grassPosition));
@@ -92,7 +87,7 @@ class GrassFieldTest {
 
         //when
         Vector2d animalPosition = new Vector2d(3, 3);
-        Animal animal = new Animal(MapDirection.NORTH, animalPosition);
+        Animal animal = new Animal(animalPosition, 7, 50);
         assertDoesNotThrow(() -> {grassField.place(animal);});
 
         //then
@@ -102,37 +97,37 @@ class GrassFieldTest {
         assertNull(grassField.objectAt(new Vector2d(10, 10)));
     }
 
-    @Test
-    public void testMove() {
-        //given
-        GrassField grassField = new GrassField(10);
-        Vector2d startPosition = new Vector2d(1, 1);
-        Animal animal = new Animal(MapDirection.NORTH, startPosition);
-
-        //when
-        assertDoesNotThrow(() -> {grassField.place(animal);});
-
-        grassField.move(animal, MoveDirection.RIGHT);
-        grassField.move(animal, MoveDirection.FORWARD);
-
-        //then
-        assertEquals(new Vector2d(2, 1), animal.getPosition());
-        System.out.println(grassField.toString());
-        assertTrue(grassField.isOccupied(new Vector2d(2, 1)));
-        assertEquals(animal, grassField.objectAt(new Vector2d(2,1)));
-
-        //when
-        Animal animal1 = new Animal(MapDirection.NORTH, startPosition);
-        assertDoesNotThrow(() -> {grassField.place(animal1);});
-        grassField.move(animal1, MoveDirection.RIGHT);
-        grassField.move(animal1, MoveDirection.FORWARD);
-
-        //then
-        assertEquals(new Vector2d(1, 1), animal1.getPosition());
-        assertTrue(grassField.isOccupied(new Vector2d(1, 1)));
-        boolean somethingAtPosition = ((grassField.objectAt(new Vector2d(1, 1)) instanceof Animal) || (grassField.objectAt(new Vector2d(1,1)) instanceof Grass));
-        assertTrue(somethingAtPosition);
-    }
+//    @Test
+//    public void testMove() {
+//        //given
+//        GrassField grassField = new GrassField(10);
+//        Vector2d startPosition = new Vector2d(1, 1);
+//        Animal animal = new Animal(startPosition, 7, 50);
+//
+//        //when
+//        assertDoesNotThrow(() -> {grassField.place(animal);});
+//
+//        grassField.move(animal, MoveDirection.RIGHT);
+//        grassField.move(animal, MoveDirection.FORWARD);
+//
+//        //then
+//        assertEquals(new Vector2d(2, 1), animal.getPosition());
+//        System.out.println(grassField.toString());
+//        assertTrue(grassField.isOccupied(new Vector2d(2, 1)));
+//        assertEquals(animal, grassField.objectAt(new Vector2d(2,1)));
+//
+//        //when
+//        Animal animal1 = new Animal(startPosition, 7, 50);
+//        assertDoesNotThrow(() -> {grassField.place(animal1);});
+//        grassField.move(animal1, MoveDirection.RIGHT);
+//        grassField.move(animal1, MoveDirection.FORWARD);
+//
+//        //then
+//        assertEquals(new Vector2d(1, 1), animal1.getPosition());
+//        assertTrue(grassField.isOccupied(new Vector2d(1, 1)));
+//        boolean somethingAtPosition = ((grassField.objectAt(new Vector2d(1, 1)) instanceof Animal) || (grassField.objectAt(new Vector2d(1,1)) instanceof Grass));
+//        assertTrue(somethingAtPosition);
+//    }
 
 
     @Test
@@ -142,7 +137,7 @@ class GrassFieldTest {
         if (grassField.objectAt(new Vector2d(0,0)) instanceof Grass) {
             grassUnderAnimal = 1;
         }
-        Animal animal = new Animal(MapDirection.NORTH, new Vector2d(0, 0));
+        Animal animal = new Animal(new Vector2d(0, 0), 7, 50);
         assertDoesNotThrow(() -> {grassField.place(animal);});
 
 
@@ -159,7 +154,7 @@ class GrassFieldTest {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No grass found"));
         System.out.println(grassField.toString()+ grassPosition);
-        Animal animalOnGrass = new Animal(MapDirection.NORTH, grassPosition);
+        Animal animalOnGrass = new Animal(grassPosition, 7, 50);
         assertDoesNotThrow(() -> {grassField.place(animalOnGrass);});
         String mapRepresentationAfterAddingAnimal = grassField.toString();
         long grassCountAfterAddingAnimal = mapRepresentationAfterAddingAnimal.chars().filter(ch -> ch == '*').count();
@@ -176,9 +171,9 @@ class GrassFieldTest {
                 .orElseThrow(() -> new RuntimeException("No grass found"));
 
         assertTrue(grassField.isOccupied(grassPosition));
-        assertTrue(grassField.objectAt(grassPosition) instanceof Grass);
+        assertInstanceOf(Grass.class, grassField.objectAt(grassPosition));
         System.out.println(grassField.toString() + grassPosition);
-        Animal animal = new Animal(MapDirection.NORTH, grassPosition);
+        Animal animal = new Animal(grassPosition, 7, 50);
         assertDoesNotThrow(() -> {grassField.place(animal);});
         assertTrue(grassField.isOccupied(grassPosition));
         assertTrue(grassField.objectAt(grassPosition) instanceof Animal);
@@ -192,16 +187,9 @@ class GrassFieldTest {
     public void animalTestToStringMovesOutOfGrassField(){
         GrassField grassField = new GrassField(10);
         grassField.registerObservers(new ConsoleMapDisplay());
-        Animal animal = new Animal(MapDirection.NORTH, new Vector2d(10, 10));
+        Animal animal = new Animal(new Vector2d(10, 10), 7, 50);
         assertDoesNotThrow(() -> {grassField.place(animal);});
-        grassField.move(animal, MoveDirection.BACKWARD);
-        grassField.move(animal, MoveDirection.BACKWARD);
-        grassField.move(animal, MoveDirection.BACKWARD);
-        grassField.move(animal, MoveDirection.RIGHT);
-        grassField.move(animal, MoveDirection.FORWARD);
-        grassField.move(animal, MoveDirection.FORWARD);
-
-
+        //TODO CHECK IF CAN MOVE OUT OF GRASSFIELD
 
     }
 

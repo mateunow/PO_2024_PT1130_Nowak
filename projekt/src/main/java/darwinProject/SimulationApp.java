@@ -1,10 +1,9 @@
 package darwinProject;
 
-import darwinProject.model.AbstractWorldMap;
+import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
-import darwinProject.model.GrassField;
+import darwinProject.model.maps.GrassField;
 import darwinProject.model.Vector2d;
-import darwinProject.enums.MapDirection;
 import darwinProject.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -28,7 +27,7 @@ public class SimulationApp extends Application {
         List<Vector2d> initialPositions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));
         for (Vector2d position : initialPositions) {
             try {
-                map.place(new Animal(MapDirection.NORTH, position));
+                map.place(new Animal(position, 7, 50)); //TODO CHANGE THIS TO VARIABLES
             } catch (Exception e) {
                 System.err.println("Nie udało się ustawić zwierzęcia na pozycji " + position + ": " + e.getMessage());
             }

@@ -3,6 +3,9 @@ package darwinProject;
 import darwinProject.model.*;
 import darwinProject.enums.MapDirection;
 import darwinProject.enums.MoveDirection;
+import darwinProject.model.maps.AbstractWorldMap;
+import darwinProject.model.maps.RectangularMap;
+import darwinProject.model.maps.WorldMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -34,7 +37,7 @@ class SimulationTest {
 
 
         //when
-        Simulation simulation = new Simulation(positions, directions,map);
+        Simulation simulation = new Simulation(positions, directions,map, 8 , 50);
         simulation.run();
         List<Animal> animals = simulation.getAnimals();
         Animal simulatedAnimal = animals.get(0);
@@ -69,7 +72,7 @@ class SimulationTest {
         List<Vector2d> positions =List.of(new Vector2d(2,2));
 
         //when
-        Simulation simulation = new Simulation(positions, directions, map);
+        Simulation simulation = new Simulation(positions, directions, map, 7 , 50);
         simulation.run();
         List<Animal> animals = simulation.getAnimals();
         Animal simulatedAnimal = animals.get(0);
@@ -90,7 +93,7 @@ class SimulationTest {
         List<Vector2d> positions =List.of(new Vector2d(0,4), new Vector2d(2,2));
 
         //when
-        Simulation simulation = new Simulation(positions, directions, map);
+        Simulation simulation = new Simulation(positions, directions, map, 7, 50);
         simulation.run();
         List<Animal> animals = simulation.getAnimals();
         Animal simulatedAnimal0 = animals.get(0);
@@ -115,7 +118,7 @@ class SimulationTest {
         List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(2,2), new Vector2d(-1,30));
 
-        Simulation simulation = new Simulation(positions, directions, map);
+        Simulation simulation = new Simulation(positions, directions, map, 7, 50);
         simulation.run();
 
 

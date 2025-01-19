@@ -1,7 +1,8 @@
-package darwinProject.model;
+package darwinProject.model.maps;
 
 import darwinProject.enums.MapDirection;
 import darwinProject.enums.MoveDirection;
+import darwinProject.model.*;
 import darwinProject.model.util.Boundary;
 import darwinProject.model.exceptions.IncorrectPositionException;
 import darwinProject.model.util.MapVisualizer;
@@ -73,8 +74,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public List<WorldElement> getElements(){
-        List<WorldElement> worldElements = new ArrayList<>(animals.values());
-        return worldElements;
+        return new ArrayList<>(animals.values());
     }
 
 

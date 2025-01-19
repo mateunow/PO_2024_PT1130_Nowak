@@ -1,5 +1,8 @@
-package darwinProject.model;
+package darwinProject.model.maps;
 
+import darwinProject.model.Grass;
+import darwinProject.model.Vector2d;
+import darwinProject.model.WorldElement;
 import darwinProject.model.util.Boundary;
 import darwinProject.model.util.RandomPositionGenerator;
 

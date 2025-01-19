@@ -4,6 +4,9 @@ import darwinProject.Simulation;
 import darwinProject.SimulationEngine;
 import darwinProject.model.*;
 import darwinProject.enums.MoveDirection;
+import darwinProject.model.maps.AbstractWorldMap;
+import darwinProject.model.maps.GrassField;
+import darwinProject.model.maps.WorldMap;
 import darwinProject.model.util.Boundary;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -154,7 +157,7 @@ public class SimulationPresenter implements MapChangeListener {
             map.registerObservers(newPresenter);
             newPresenter.setWorldMap(map);
 
-            Simulation simulation = new Simulation(positions, directions, map);
+            Simulation simulation = new Simulation(positions, directions, map, 7, 50); //TODO change this
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             newPresenter.moveDescriptionLabel.setText("Simulation started with moves: " + moveList);
 

@@ -1,6 +1,10 @@
-package darwinProject.model;
+package darwinProject.model.maps;
 
 import darwinProject.enums.MoveDirection;
+import darwinProject.model.Animal;
+import darwinProject.model.MoveValidator;
+import darwinProject.model.Vector2d;
+import darwinProject.model.WorldElement;
 import darwinProject.model.util.Boundary;
 import darwinProject.model.exceptions.IncorrectPositionException;
 

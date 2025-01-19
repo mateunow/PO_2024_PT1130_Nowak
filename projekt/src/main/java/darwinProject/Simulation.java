@@ -1,9 +1,8 @@
 package darwinProject;
 
-import darwinProject.model.AbstractWorldMap;
+import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.Vector2d;
-import darwinProject.enums.MapDirection;
 import darwinProject.enums.MoveDirection;
 import darwinProject.model.exceptions.IncorrectPositionException;
 
@@ -15,16 +14,20 @@ public class Simulation implements Runnable
     private final List<Animal> animals;
     private final List<MoveDirection> moves;
     private final AbstractWorldMap world;
+    private final Integer numberOfGenes;
+    private final Integer startingEnergy;
 
 
-    public Simulation(List<Vector2d> positions, List<MoveDirection> moves, AbstractWorldMap world) {
+    public Simulation(List<Vector2d> positions, List<MoveDirection> moves, AbstractWorldMap world, Integer numberOfGenes, Integer startingEnergy) {
         this.moves = moves;
         this.world = world;
+        this.numberOfGenes = numberOfGenes;
+        this.startingEnergy = startingEnergy;
         this.animals = new ArrayList<>();
 
         for (Vector2d position : positions) {
             try {
-                Animal animal = new Animal(MapDirection.NORTH, position);
+                Animal animal = new Animal(position, numberOfGenes, startingEnergy);
                 world.place(animal);
                 this.animals.add(animal);
             }

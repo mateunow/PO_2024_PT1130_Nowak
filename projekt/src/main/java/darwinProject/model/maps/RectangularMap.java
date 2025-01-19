@@ -1,6 +1,7 @@
-package darwinProject.model;
+package darwinProject.model.maps;
 
 
+import darwinProject.model.Vector2d;
 import darwinProject.model.util.Boundary;
 
 public class RectangularMap extends AbstractWorldMap {
