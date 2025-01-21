@@ -9,12 +9,12 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class Animal implements WorldElement {
-    private MapDirection direction;
+    protected MapDirection direction;
     private Vector2d position;
     private int energy;
-    private final int maxGene = 7;
+    protected final int maxGene = 7;
     private final ArrayList<Integer> genome = new ArrayList<>();
-    private int currentGene;
+    protected int currentGene;
     private int daysLived = 1;
     private int plantsEaten;
     private int dayOfDeath;
