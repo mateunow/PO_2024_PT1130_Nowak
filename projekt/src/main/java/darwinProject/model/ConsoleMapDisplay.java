@@ -11,7 +11,7 @@ public class ConsoleMapDisplay implements MapChangeListener {
         synchronized (System.out) {
             System.out.println("Obecna mapa: " + worldMap.getId());
             System.out.println(message);
-            System.out.println(worldMap.toString());
+            System.out.println(worldMap);
             updatesCount++;
             System.out.println("Updates to this date: " + updatesCount);
         }

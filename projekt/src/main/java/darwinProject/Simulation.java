@@ -45,14 +45,17 @@ public class Simulation implements Runnable
 //        pierwsze zwierze zrobi ruch
 
         int animalsCount = animals.size();
-        for (int i = 0; i < animalsCount; i++) {
-            //TODO zmień warunek zakończenia tej pętli
-            world.move(animals.get(i));
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (int j = 0; j< 100; j++) {
+            for (int i = 0; i < animalsCount; i++) {
+                //TODO zmień warunek zakończenia tej pętli i thread do move animala
+                world.move(animals.get(i));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+            System.out.println(world);
         }
     }
 

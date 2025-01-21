@@ -36,6 +36,13 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
         }
     }
 
+    public void generateGrassPositions(ArrayList<Vector2d> positions) {
+        Collections.shuffle(positions);
+        for (int i = 0; i < grassCount; i++) {
+            positions.add(positions.get(i));
+        }
+    }
+
     @Override
     public Iterator<Vector2d> iterator() {
         return new Iterator<Vector2d>() {

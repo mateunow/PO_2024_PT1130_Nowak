@@ -22,7 +22,6 @@ public class Vector2d {
     public Vector2d subtract(Vector2d other){
         return new Vector2d(this.x-other.x, this.y-other.y);
     }
-    //W tych x - other.x nie używać this.x raczej chyba że konieczny
     public Vector2d upperRight(Vector2d other){
         int newX = Math.max(this.x, other.x);
         int newY = Math.max(this.y, other.y);

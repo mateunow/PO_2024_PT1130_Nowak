@@ -32,6 +32,20 @@ class AnimalTest {
 
 
     }
+
+    @Test
+    public void testReproduction() {
+        Animal animal = new Animal(new Vector2d(2,2), 7, 70);
+        Animal animal2 = new Animal(new Vector2d(2,2), 7, 50);
+        System.out.println("First animal genome: " + animal.getGenome());
+        System.out.println("Second animal genome: " + animal2.getGenome());
+
+        Animal animal3 = animal.reproduceWithOtherAnimal(animal2, 20);
+        assertEquals(50, animal.getEnergy());
+        assertEquals(30, animal2.getEnergy());
+        assertEquals(40, animal3.getEnergy());
+        System.out.println("Child genome: " + animal3.getGenome());
+    }
     @Test
     void setPosition() {
     }

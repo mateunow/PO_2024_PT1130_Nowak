@@ -10,7 +10,7 @@ import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected final MapVisualizer mapVisualizer = new MapVisualizer(this);
-    private final Map<Vector2d, Animal> animals = new HashMap<>();
+    protected final Map<Vector2d, Animal> animals = new HashMap<>();
     private final HashSet<MapChangeListener> observers = new HashSet<>();
     protected final int id = this.hashCode();
 
@@ -32,6 +32,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
         MapDirection currentDirection = animal.getDirection();
+
         animal.move( this);
         animals.remove(currentPosition);
         animals.put(animal.getPosition(), animal);
