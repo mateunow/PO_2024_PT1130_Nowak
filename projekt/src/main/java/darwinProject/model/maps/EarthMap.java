@@ -3,19 +3,26 @@ package darwinProject.model.maps;
 import darwinProject.model.Vector2d;
 import darwinProject.model.util.Boundary;
 
-import java.util.AbstractMap;
 
 public class EarthMap extends AbstractWorldMap {
     //TODO zoptymalizuj tą klasę bo pewnie da się lepiej
-    private Vector2d upperRight;
+    private final Vector2d upperRight;
     private final Vector2d lowerLeft = new Vector2d(0,0);
+    private final Boundary finalBoundary;
 
-    public EarthMap(Vector2d upperRight) {
-        this.upperRight = upperRight;
+    public EarthMap(int height, int width) {
+        this.upperRight = new Vector2d(width - 1,height - 1);
+        this.finalBoundary = new Boundary(lowerLeft, upperRight);
+    }
+
+    @Override
+    public boolean canMoveTo(Vector2d position) {
+        return position.precedes(upperRight) && position.follows(lowerLeft);
+        //TODO change this from precedes to other method that does not check both values in Vector2d
     }
 
     @Override
     public Boundary getCurrentBounds() {
-        return new Boundary(lowerLeft, upperRight);
+        return finalBoundary;
     }
 }

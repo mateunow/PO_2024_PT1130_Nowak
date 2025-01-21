@@ -1,6 +1,4 @@
-package darwinProject.model;
-
-import darwinProject.model.maps.WorldMap;
+package darwinProject.model.maps;
 
 public interface MapChangeListener {
     void mapChanged(WorldMap worldMap, String message);

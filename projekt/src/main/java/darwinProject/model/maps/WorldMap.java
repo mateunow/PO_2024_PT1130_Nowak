@@ -1,12 +1,11 @@
 package darwinProject.model.maps;
 
-import darwinProject.enums.MoveDirection;
 import darwinProject.model.Animal;
 import darwinProject.model.MoveValidator;
 import darwinProject.model.Vector2d;
 import darwinProject.model.WorldElement;
 import darwinProject.model.util.Boundary;
-import darwinProject.model.exceptions.IncorrectPositionException;
+import darwinProject.exceptions.IncorrectPositionException;
 
 import java.util.List;
 
@@ -19,10 +18,10 @@ import java.util.List;
 public interface WorldMap extends MoveValidator {
 
     /**
-     * Place a animal on the map.
+     * Place an animal on the map.
      *
      * @param animal The animal to place on the map.
-     * @return True if the animal was placed. The animal cannot be placed if the move is not valid.
+     * return True if the animal was placed. The animal cannot be placed if the move is not valid.
      */
     void place(Animal animal) throws IncorrectPositionException;
 
@@ -30,7 +29,7 @@ public interface WorldMap extends MoveValidator {
      * Moves an animal (if it is present on the map) according to specified direction.
      * If the move is not possible, this method has no effect.
      */
-    void move(Animal animal, MoveDirection direction);
+    void move(Animal animal);
 
     /**
      * Return true if given position on the map is occupied. Should not be

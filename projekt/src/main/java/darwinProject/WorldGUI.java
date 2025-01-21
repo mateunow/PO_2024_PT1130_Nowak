@@ -1,5 +1,6 @@
 package darwinProject;
 
+import darwinProject.presenter.SimulationApp;
 import javafx.application.Application;
 
 public class WorldGUI {

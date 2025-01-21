@@ -1,10 +1,9 @@
 package darwinProject.model.maps;
 
 import darwinProject.enums.MapDirection;
-import darwinProject.enums.MoveDirection;
 import darwinProject.model.*;
 import darwinProject.model.util.Boundary;
-import darwinProject.model.exceptions.IncorrectPositionException;
+import darwinProject.exceptions.IncorrectPositionException;
 import darwinProject.model.util.MapVisualizer;
 
 import java.util.*;
@@ -30,10 +29,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public void move(Animal animal, MoveDirection direction) {
+    public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
         MapDirection currentDirection = animal.getDirection();
-        animal.move(this);
+        animal.move( this);
         animals.remove(currentPosition);
         animals.put(animal.getPosition(), animal);
 

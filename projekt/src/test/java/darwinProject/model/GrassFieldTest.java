@@ -1,6 +1,6 @@
 package darwinProject.model;
 
-import darwinProject.model.exceptions.IncorrectPositionException;
+import darwinProject.exceptions.IncorrectPositionException;
 import darwinProject.model.maps.GrassField;
 import org.junit.jupiter.api.Test;
 

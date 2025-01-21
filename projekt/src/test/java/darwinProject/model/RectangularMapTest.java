@@ -1,7 +1,6 @@
 package darwinProject.model;
 
-import darwinProject.enums.MoveDirection;
-import darwinProject.model.exceptions.IncorrectPositionException;
+import darwinProject.exceptions.IncorrectPositionException;
 import darwinProject.model.maps.RectangularMap;
 import darwinProject.model.maps.WorldMap;
 import org.junit.jupiter.api.Test;
@@ -71,7 +70,7 @@ class RectangularMapTest {
 
         //uznałem, że te 2 println-y pomogą zrozumieć innemu użytkownikowi na czym polega ten test
         System.out.println(map);
-        map.move(animal0, MoveDirection.FORWARD);
+        map.move(animal0);
         System.out.println(map);
 
         //then

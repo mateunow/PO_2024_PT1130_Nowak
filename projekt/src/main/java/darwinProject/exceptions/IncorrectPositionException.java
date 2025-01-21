@@ -1,4 +1,4 @@
-package darwinProject.model.exceptions;
+package darwinProject.exceptions;
 
 import darwinProject.model.Vector2d;
 

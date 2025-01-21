@@ -1,6 +1,8 @@
 package darwinProject.model;
 
 import darwinProject.enums.MapDirection;
+import darwinProject.model.maps.WorldMap;
+import darwinProject.model.util.Boundary;
 
 import java.util.List;
 import java.util.Random;
@@ -13,6 +15,9 @@ public class Animal implements WorldElement {
     private final int maxGene = 7;
     private final ArrayList<Integer> genome = new ArrayList<>();
     private int currentGene;
+    private int daysLived = 1;
+    private int plantsEaten;
+    private int dayOfDeath;
     Random rand = new Random();
 
 
@@ -42,25 +47,44 @@ public class Animal implements WorldElement {
     }
 
 
-    public void move(MoveValidator validator) {
-        Vector2d potentialNewPosition;
+    public void move(WorldMap map) {
+        Vector2d potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
 
-        potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
-        if(validator.canMoveTo(potentialNewPosition)) {
-            this.position = potentialNewPosition;
-            this.turn(genome.get(currentGene));
-            currentGene++;
+        Boundary boundary = map.getCurrentBounds();
+        int yPosition = potentialNewPosition.getY();
+        int mapWidth = boundary.upperRight().getX();
+        int potentialX = potentialNewPosition.getX();
+        if ( (yPosition == -1) || (yPosition > boundary.upperRight().getY())) {
+            this.turn(4);
         }
-        //TODO zmień ilość żeby genom nie powiększał się do nieskończoności tylko do tego N - liczby genomów
+        else {
+            if (potentialX > mapWidth) {
+                this.position = new Vector2d(0, yPosition);
+                this.turn(genome.get(currentGene));
+            }
+            else if(potentialX < 0) {
+                this.position = new Vector2d(mapWidth, yPosition);
+                this.turn(genome.get(currentGene));
+            }
+            else {
+                this.position = potentialNewPosition;
+                this.turn(genome.get(currentGene));
+            }
+        }
+        daysLived +=1;
     }
+
     public void turn(Integer turnCount){
         this.direction = this.direction.turn(turnCount);
+        currentGene++;
+        currentGene%=maxGene;
     }
 
-    public void addEnergy(Integer energy){
+    public void addEnergy(int energy){
         this.energy += energy;
+        plantsEaten += 1;
     }
-    public void reduceEnergy(Integer energy){
+    public void reduceEnergy(int energy){
         this.energy -= energy;
     }
     public Vector2d getPosition(){
@@ -68,6 +92,10 @@ public class Animal implements WorldElement {
     }
     public MapDirection getDirection() {
         return this.direction;
+    }
+
+    public void die(int dayOfDeath) {
+        this.dayOfDeath = dayOfDeath;
     }
 
     public final List<Integer> getGenome() {

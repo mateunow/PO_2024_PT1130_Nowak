@@ -2,13 +2,11 @@ package darwinProject;
 
 import darwinProject.model.*;
 import darwinProject.enums.MapDirection;
-import darwinProject.enums.MoveDirection;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.maps.RectangularMap;
 import darwinProject.model.maps.WorldMap;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,28 +17,15 @@ class SimulationTest {
     @Test
     public void testRunWithValidMoveDirection () {
         //given
-        List<MoveDirection> directions = new ArrayList<>();
         AbstractWorldMap map = new RectangularMap(5,5);
-        // W tym teście użyłem innego sposobu zapisu kierunków poruszania się, moim zdaniem jest on mniej czytelny, ponieważ
-        // zajmuje zbyt wiele miejsca (w porównaniu do jednej linijki w innych testach), więc w następnych przykładach
-        // nie używałem go. Proszę o komentarz czy decyzja była słuszna, czy trzeba sprawdzać również w ten sposób.
-        directions.add(MoveDirection.RIGHT);
-        directions.add(MoveDirection.LEFT);
-        directions.add(MoveDirection.FORWARD);
-        directions.add(MoveDirection.FORWARD);
-        directions.add(MoveDirection.FORWARD);
-        directions.add(MoveDirection.RIGHT);
-        directions.add(MoveDirection.BACKWARD);
-        directions.add(MoveDirection.BACKWARD);
-        directions.add(MoveDirection.BACKWARD);
         List<Vector2d> positions =List.of(new Vector2d(2,2));
 
 
         //when
-        Simulation simulation = new Simulation(positions, directions,map, 8 , 50);
+        Simulation simulation = new Simulation(positions, map, 8 , 50);
         simulation.run();
         List<Animal> animals = simulation.getAnimals();
-        Animal simulatedAnimal = animals.get(0);
+        Animal simulatedAnimal = animals.getFirst();
 
         //then
         assertEquals(1, animals.size());
@@ -50,32 +35,31 @@ class SimulationTest {
 
     }
 
-    @Test
-    public void testRunWithException () {
-        //given
-        WorldMap map = new RectangularMap(5, 5);
-        String[] directionsArray = "m a v x c h m p".split(" ");
-
-        try {
-            List<MoveDirection> directions = OptionsParser.parse(directionsArray);
-        } catch (IllegalArgumentException e) {
-            assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(directionsArray));
-        }
-    }
+//    @Test
+//    public void testRunWithException () {
+//        //given
+//        WorldMap map = new RectangularMap(5, 5);
+//        String[] directionsArray = "m a v x c h m p".split(" ");
+//
+//        try {
+//            List<MoveDirection> directions = OptionsParser.parse(directionsArray);
+//        } catch (IllegalArgumentException e) {
+//            assertThrows(IllegalArgumentException.class, () -> OptionsParser.parse(directionsArray));
+//        }
+        //TODO replace with new run method
+//    }
 
     @Test
     public void runWithValidMoveDirection () {
         //given
         AbstractWorldMap map = new RectangularMap(5,5);
-        String[] directionsArray = "f f l l f b r f f f f f f".split(" ");
-        List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(2,2));
 
         //when
-        Simulation simulation = new Simulation(positions, directions, map, 7 , 50);
+        Simulation simulation = new Simulation(positions, map, 7 , 50);
         simulation.run();
         List<Animal> animals = simulation.getAnimals();
-        Animal simulatedAnimal = animals.get(0);
+        Animal simulatedAnimal = animals.getFirst();
 
         //then
         assertEquals(MapDirection.WEST, simulatedAnimal.getDirection());
@@ -88,12 +72,10 @@ class SimulationTest {
     public void testSimulationWithTwoAnimalsCorrectDirectionsAndCrossingEachOther () {
         //given
         AbstractWorldMap map = new RectangularMap(5,5);
-        String[] directionsArray = "r l f f f f r b f b f r f f r f f f f b f f f f l l f f f f".split(" ");
-        List<MoveDirection> directions = OptionsParser.parse(directionsArray);
-        List<Vector2d> positions =List.of(new Vector2d(0,4), new Vector2d(2,2));
+         List<Vector2d> positions =List.of(new Vector2d(0,4), new Vector2d(2,2));
 
         //when
-        Simulation simulation = new Simulation(positions, directions, map, 7, 50);
+        Simulation simulation = new Simulation(positions, map, 7, 50);
         simulation.run();
         List<Animal> animals = simulation.getAnimals();
         Animal simulatedAnimal0 = animals.get(0);
@@ -113,12 +95,10 @@ class SimulationTest {
 
     @Test
     public void testStartAnimalsOneCorrectOneWithWrongStartingPositionSet () {
-        String[] directionsArray = "f f".split(" ");
         AbstractWorldMap map = new RectangularMap(5,5);
-        List<MoveDirection> directions = OptionsParser.parse(directionsArray);
         List<Vector2d> positions =List.of(new Vector2d(2,2), new Vector2d(-1,30));
 
-        Simulation simulation = new Simulation(positions, directions, map, 7, 50);
+        Simulation simulation = new Simulation(positions, map, 7, 50);
         simulation.run();
 
 

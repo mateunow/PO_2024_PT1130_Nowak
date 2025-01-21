@@ -1,8 +1,9 @@
 package darwinProject.model;
 
+import darwinProject.model.maps.MapChangeListener;
 import darwinProject.model.maps.WorldMap;
 
-public class ConsoleMapDisplay implements MapChangeListener{
+public class ConsoleMapDisplay implements MapChangeListener {
     private int updatesCount = 0;
 
     @Override

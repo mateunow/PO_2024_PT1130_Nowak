@@ -1,10 +1,9 @@
-package darwinProject;
+package darwinProject.presenter;
 
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.maps.GrassField;
 import darwinProject.model.Vector2d;
-import darwinProject.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

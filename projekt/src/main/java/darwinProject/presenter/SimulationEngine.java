@@ -1,5 +1,7 @@
-package darwinProject;
+package darwinProject.presenter;
 
+
+import darwinProject.Simulation;
 
 import java.util.ArrayList;
 import java.util.List;

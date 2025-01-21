@@ -3,8 +3,7 @@ package darwinProject;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.Vector2d;
-import darwinProject.enums.MoveDirection;
-import darwinProject.model.exceptions.IncorrectPositionException;
+import darwinProject.exceptions.IncorrectPositionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +11,12 @@ import java.util.List;
 public class Simulation implements Runnable
 {
     private final List<Animal> animals;
-    private final List<MoveDirection> moves;
     private final AbstractWorldMap world;
     private final Integer numberOfGenes;
     private final Integer startingEnergy;
 
 
-    public Simulation(List<Vector2d> positions, List<MoveDirection> moves, AbstractWorldMap world, Integer numberOfGenes, Integer startingEnergy) {
-        this.moves = moves;
+    public Simulation(List<Vector2d> positions, AbstractWorldMap world, Integer numberOfGenes, Integer startingEnergy) {
         this.world = world;
         this.numberOfGenes = numberOfGenes;
         this.startingEnergy = startingEnergy;
@@ -48,8 +45,9 @@ public class Simulation implements Runnable
 //        pierwsze zwierze zrobi ruch
 
         int animalsCount = animals.size();
-        for (int i = 0; i < moves.size(); i++) {
-            world.move(animals.get(i % animalsCount), moves.get(i));
+        for (int i = 0; i < animalsCount; i++) {
+            //TODO zmień warunek zakończenia tej pętli
+            world.move(animals.get(i));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

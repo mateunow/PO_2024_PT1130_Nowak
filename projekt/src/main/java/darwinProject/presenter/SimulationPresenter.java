@@ -1,11 +1,10 @@
 package darwinProject.presenter;
 
 import darwinProject.Simulation;
-import darwinProject.SimulationEngine;
 import darwinProject.model.*;
-import darwinProject.enums.MoveDirection;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.maps.GrassField;
+import darwinProject.model.maps.MapChangeListener;
 import darwinProject.model.maps.WorldMap;
 import darwinProject.model.util.Boundary;
 import javafx.application.Platform;
@@ -24,7 +23,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
-import static darwinProject.OptionsParser.parse;
 
 public class SimulationPresenter implements MapChangeListener {
     private WorldMap map;
@@ -142,7 +140,6 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private void startSimulation() {
         String moveList = moveListTextField.getText();
-        List<MoveDirection> directions = parse(moveList.split(" "));
         List<Vector2d> positions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));
 
         Stage newStage = new Stage();
@@ -157,7 +154,7 @@ public class SimulationPresenter implements MapChangeListener {
             map.registerObservers(newPresenter);
             newPresenter.setWorldMap(map);
 
-            Simulation simulation = new Simulation(positions, directions, map, 7, 50); //TODO change this
+            Simulation simulation = new Simulation(positions, map, 7, 50); //TODO change this
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             newPresenter.moveDescriptionLabel.setText("Simulation started with moves: " + moveList);
 
