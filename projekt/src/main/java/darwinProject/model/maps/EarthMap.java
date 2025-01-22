@@ -8,9 +8,7 @@ import darwinProject.model.WorldElement;
 import darwinProject.model.util.Boundary;
 import darwinProject.model.util.RandomPositionGenerator;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class EarthMap extends AbstractWorldMap {
@@ -19,6 +17,7 @@ public class EarthMap extends AbstractWorldMap {
     private final Vector2d lowerLeft = new Vector2d(0,0);
     private final Boundary finalBoundary;
     private final Map<Vector2d, Grass> grassMap = new HashMap<>();
+    private ArrayList<Vector2d> fieldsWithoutGrass = new ArrayList<>();
 
 
     public EarthMap(int height, int width, int startGrassCount ) {
@@ -28,6 +27,7 @@ public class EarthMap extends AbstractWorldMap {
         for(Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
         }
+        this.fieldsWithoutGrass = findFieldsWithoutGrass();
     }
 
     @Override
@@ -51,6 +51,7 @@ public class EarthMap extends AbstractWorldMap {
         if (grassMap.containsKey(animalNewPosition)) {
             grassMap.remove(animalNewPosition);
             animal.addEnergy(20); //TODO ZAMIEŃ TO NA WŁAŚCIWĄ ENERGIĘ
+            fieldsWithoutGrass.add(animalNewPosition);
         }
         animals.remove(currentPosition);
         animals.put(animalNewPosition, animal);
@@ -64,11 +65,37 @@ public class EarthMap extends AbstractWorldMap {
     }
 
     @Override
+    public void generateNewGrassPositions(Integer quantityOfGrassToAdd) {
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(fieldsWithoutGrass, quantityOfGrassToAdd);
+        for(Vector2d grassPosition : randomPositionGenerator) {
+            grassMap.put(grassPosition, new Grass(grassPosition));
+            fieldsWithoutGrass.remove(grassPosition);
+            //TODO pomyśl czy tego nie zamienić na hashset
+        }
+    }
+
+    @Override
     public WorldElement objectAt(Vector2d position) {
         WorldElement object = super.objectAt(position);
         if(object != null) {return object;}
         return grassMap.get(position);
 
+    }
+    @Override
+    public ArrayList<Vector2d> findFieldsWithoutGrass() {
+        Boundary boundary = getCurrentBounds();
+        int width = boundary.upperRight().getY();
+        int height = boundary.upperRight().getX();
+
+        for (int i = 0; i <= width; i++ ) {
+            for (int j = 0; j <= height; j++) {
+                Vector2d field = new Vector2d(i,j);
+                if (!grassMap.containsKey(field)) {
+                    fieldsWithoutGrass.add(field);
+                }
+            }
+        }
+        return fieldsWithoutGrass;
     }
 
     @Override

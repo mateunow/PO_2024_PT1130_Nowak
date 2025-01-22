@@ -20,6 +20,10 @@ public class RectangularMap extends AbstractWorldMap {
     }
 
     @Override
+    public void generateNewGrassPositions(Integer grassCount) {
+        //TODO DELETE THIS
+    }
+    @Override
     public Boundary getCurrentBounds(){
         return finalBounds;
     }

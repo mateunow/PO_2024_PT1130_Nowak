@@ -6,6 +6,7 @@ import darwinProject.model.maps.EarthMap;
 import darwinProject.presenter.SimulationApp;
 import javafx.application.Application;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Word {
@@ -16,5 +17,8 @@ public class Word {
                 Simulation simulation = new Simulation( positions ,map, 7, 50);
                 simulation.run();
              System.out.println("System zakończył działanie");
+
+
+
          }
 }

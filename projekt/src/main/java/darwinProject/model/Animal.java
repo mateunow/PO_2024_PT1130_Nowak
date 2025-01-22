@@ -170,8 +170,10 @@ public class Animal implements WorldElement {
     public int getEnergy(){
         return this.energy;
     }
+    public int getChildrenCount(){
+        return this.childrenCount;
+    }
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
-
 }

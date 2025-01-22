@@ -44,6 +44,9 @@ class AnimalTest {
         assertEquals(50, animal.getEnergy());
         assertEquals(30, animal2.getEnergy());
         assertEquals(40, animal3.getEnergy());
+        assertEquals(0, animal3.getChildrenCount());
+        assertEquals(1, animal2.getChildrenCount());
+        assertEquals(1, animal.getChildrenCount());
         System.out.println("Child genome: " + animal3.getGenome());
     }
     @Test

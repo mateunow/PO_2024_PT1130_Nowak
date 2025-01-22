@@ -67,7 +67,19 @@ public abstract class AbstractWorldMap implements WorldMap {
         throw new IncorrectPositionException(position);
     }}
 
+    public ArrayList<Vector2d> findFieldsWithoutGrass() {
+        ArrayList<Vector2d> positions = new ArrayList<>();
+        Boundary boundary = getCurrentBounds();
+        int width = boundary.upperRight().getY();
+        int height = boundary.upperRight().getX();
 
+        for (int i = 0; i < width; i++ ) {
+            for (int j = 0; j < height; j++) {
+                positions.add(new Vector2d(i, j));
+            }
+        }
+        return positions;
+    }
     @Override
     public WorldElement objectAt(Vector2d position) {
         return animals.get(position);
@@ -77,7 +89,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         return new ArrayList<>(animals.values());
     }
 
-
+    public abstract void generateNewGrassPositions(Integer grassCount);
     public abstract Boundary getCurrentBounds();
 
     public String toString() {

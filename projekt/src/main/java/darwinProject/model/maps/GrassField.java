@@ -24,6 +24,8 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
+
+
     @Override
     public WorldElement objectAt(Vector2d position) {
         WorldElement object = super.objectAt(position);
@@ -37,6 +39,11 @@ public class GrassField extends AbstractWorldMap {
         List<WorldElement> worldElements = super.getElements();
         worldElements.addAll(grassMap.values());
         return worldElements;
+    }
+
+    @Override
+    public void generateNewGrassPositions(Integer grassCount) {
+        //TODO DELETE THIS
     }
 
     @Override
