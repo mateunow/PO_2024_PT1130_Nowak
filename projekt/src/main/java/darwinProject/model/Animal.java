@@ -23,9 +23,14 @@ public class Animal implements WorldElement {
     private int offspringCount = 0;
     private int childrenCount = 0;
     Random rand = new Random();
+    private final Integer energyReadyToReproduce;
+    private final Integer energyToReproduce;
+    private final Integer minNumberOfMutations;
+    private final Integer maxNumberOfMutations;
 
 
-    public Animal(Vector2d position, Integer numberOfGenes, Integer startingEnergy){
+    public Animal(Vector2d position, Integer numberOfGenes, Integer startingEnergy, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations){
+        //initial animal
         this.position = position;
         this.energy = startingEnergy;
         this.genome = new ArrayList<>();
@@ -36,9 +41,14 @@ public class Animal implements WorldElement {
         this.direction = MapDirection.values()[rand.nextInt(MapDirection.values().length)];
         this.firstParent = null;
         this.secondParent = null;
+        this.energyReadyToReproduce = energyReadyToReproduce;
+        this.energyToReproduce = energyToReproduce;
+        this.minNumberOfMutations = minNumberOfMutations;
+        this.maxNumberOfMutations = maxNumberOfMutations;
     }
 
-    public Animal(Vector2d position, ArrayList<Integer> genome,  Integer energy, Animal firstParent, Animal secondParent){
+    public Animal(Vector2d position, ArrayList<Integer> genome,  Integer energy, Animal firstParent, Animal secondParent, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations){
+        //child animal born after the simulation started
         this.position = position;
         this.energy = energy;
         this.genome = genome;
@@ -46,12 +56,17 @@ public class Animal implements WorldElement {
         this.firstParent = firstParent;
         this.secondParent = secondParent;
         this.direction = MapDirection.values()[rand.nextInt(MapDirection.values().length)];
+        this.energyReadyToReproduce = energyReadyToReproduce;
+        this.energyToReproduce = energyToReproduce;
+        this.minNumberOfMutations = minNumberOfMutations;
+        this.maxNumberOfMutations = maxNumberOfMutations;
     }
 
 
     public String toString() {
         return switch (this.direction) {
             //TODO change those directions strings to emojis/something other than NE
+            //TODO add a value of energy
             case NORTH -> "^";
             case NORTHEAST -> "NE";
             case EAST -> ">";
@@ -91,13 +106,13 @@ public class Animal implements WorldElement {
         daysLived +=1;
     }
 
-    public Animal reproduceWithOtherAnimal(Animal animal, Integer reproductionEnergy) {
+    public Animal reproduceWithOtherAnimal(Animal animal) {
         ArrayList<Integer> childGenome = createChildGenome(this, animal);
         this.childrenCount++;
-        this.energy -= reproductionEnergy;
+        this.energy -= energyToReproduce;
         animal.childrenCount++;
-        animal.energy -= reproductionEnergy;
-        return new Animal(this.getPosition(), childGenome, 2 * reproductionEnergy, this, animal);
+        animal.energy -= energyToReproduce;
+        return new Animal(this.getPosition(), childGenome, 2 * energyToReproduce, this, animal, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
     }
 
     public ArrayList<Integer> createChildGenome(Animal animal1, Animal animal2) {

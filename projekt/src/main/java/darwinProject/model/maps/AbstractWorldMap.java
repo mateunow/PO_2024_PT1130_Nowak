@@ -66,9 +66,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         else {
         throw new IncorrectPositionException(position);
     }}
-
-    public ArrayList<Vector2d> findFieldsWithoutGrass() {
-        ArrayList<Vector2d> positions = new ArrayList<>();
+    public abstract void eatPlants(List<Animal> list);
+    public Set<Vector2d> findFieldsWithoutGrass() {
+        Set<Vector2d> positions = new HashSet<>();
         Boundary boundary = getCurrentBounds();
         int width = boundary.upperRight().getY();
         int height = boundary.upperRight().getX();
@@ -80,6 +80,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         return positions;
     }
+
+    public abstract void generateNewGrassPositions();
+
     @Override
     public WorldElement objectAt(Vector2d position) {
         return animals.get(position);
@@ -89,7 +92,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         return new ArrayList<>(animals.values());
     }
 
-    public abstract void generateNewGrassPositions(Integer grassCount);
+
     public abstract Boundary getCurrentBounds();
 
     public String toString() {

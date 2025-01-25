@@ -2,10 +2,7 @@ package darwinProject.presenter;
 
 import darwinProject.Simulation;
 import darwinProject.model.*;
-import darwinProject.model.maps.AbstractWorldMap;
-import darwinProject.model.maps.GrassField;
-import darwinProject.model.maps.MapChangeListener;
-import darwinProject.model.maps.WorldMap;
+import darwinProject.model.maps.*;
 import darwinProject.model.util.Boundary;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -150,11 +147,11 @@ public class SimulationPresenter implements MapChangeListener {
             BorderPane newRoot = loader.load();
 
             SimulationPresenter newPresenter = loader.getController();
-            AbstractWorldMap map = new GrassField(10);
+            AbstractWorldMap map = new EarthMap(100,100,10,2,20); //TODO change this
             map.registerObservers(newPresenter);
             newPresenter.setWorldMap(map);
 
-            Simulation simulation = new Simulation(positions, map, 7, 50); //TODO change this
+            Simulation simulation = new Simulation(100, 100, 20, 20, 5, 5, 50, 20, 0, 3, 7, 50); //TODO change this
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             newPresenter.moveDescriptionLabel.setText("Simulation started with moves: " + moveList);
 

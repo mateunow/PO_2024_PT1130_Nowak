@@ -17,17 +17,21 @@ public class EarthMap extends AbstractWorldMap {
     private final Vector2d lowerLeft = new Vector2d(0,0);
     private final Boundary finalBoundary;
     private final Map<Vector2d, Grass> grassMap = new HashMap<>();
-    private ArrayList<Vector2d> fieldsWithoutGrass = new ArrayList<>();
+    private Set<Vector2d> fieldsWithoutGrass = new HashSet<>();
+    private final Integer numberOfPlantsGrownDaily;
+    private final Integer energyFromEatingPlant;
 
 
-    public EarthMap(int height, int width, int startGrassCount ) {
+    public EarthMap(int height, int width, int startGrassCount, int numberOfPlantsGrownDaily, int energyFromEatingPlant) {
         this.upperRight = new Vector2d(width - 1,height - 1);
         this.finalBoundary = new Boundary(lowerLeft, upperRight);
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width -1, height-1, startGrassCount);
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width, height, startGrassCount);
         for(Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
         }
         this.fieldsWithoutGrass = findFieldsWithoutGrass();
+        this.numberOfPlantsGrownDaily = numberOfPlantsGrownDaily;
+        this.energyFromEatingPlant = energyFromEatingPlant;
     }
 
     @Override
@@ -37,9 +41,11 @@ public class EarthMap extends AbstractWorldMap {
         // Dodać walidator ten do animala i jak będzie próbowało wyjść w górę albo w dół to przesuwać
     }
 
-    public void addGrasses(int grassCount) {
+    @Override
+    public void eatPlants(List<Animal> list) {
 
     }
+
 
     @Override
     public void move(Animal animal) {
@@ -50,8 +56,8 @@ public class EarthMap extends AbstractWorldMap {
         Vector2d animalNewPosition = animal.getPosition();
         if (grassMap.containsKey(animalNewPosition)) {
             grassMap.remove(animalNewPosition);
-            animal.addEnergy(20); //TODO ZAMIEŃ TO NA WŁAŚCIWĄ ENERGIĘ
-            fieldsWithoutGrass.add(animalNewPosition);
+            animal.addEnergy(energyFromEatingPlant); //TODO ZAMIEŃ TO NA WŁAŚCIWĄ ENERGIĘ
+            fieldsWithoutGrass.add(currentPosition);
         }
         animals.remove(currentPosition);
         animals.put(animalNewPosition, animal);
@@ -65,12 +71,11 @@ public class EarthMap extends AbstractWorldMap {
     }
 
     @Override
-    public void generateNewGrassPositions(Integer quantityOfGrassToAdd) {
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(fieldsWithoutGrass, quantityOfGrassToAdd);
-        for(Vector2d grassPosition : randomPositionGenerator) {
+    public void generateNewGrassPositions() {
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(new ArrayList<>(fieldsWithoutGrass), numberOfPlantsGrownDaily);
+        for (Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
             fieldsWithoutGrass.remove(grassPosition);
-            //TODO pomyśl czy tego nie zamienić na hashset
         }
     }
 
@@ -82,21 +87,23 @@ public class EarthMap extends AbstractWorldMap {
 
     }
     @Override
-    public ArrayList<Vector2d> findFieldsWithoutGrass() {
+    public Set<Vector2d> findFieldsWithoutGrass() {
         Boundary boundary = getCurrentBounds();
         int width = boundary.upperRight().getY();
         int height = boundary.upperRight().getX();
 
-        for (int i = 0; i <= width; i++ ) {
-            for (int j = 0; j <= height; j++) {
-                Vector2d field = new Vector2d(i,j);
+        Set<Vector2d> fieldsWithoutGrassSet = new HashSet<>();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                Vector2d field = new Vector2d(i, j);
                 if (!grassMap.containsKey(field)) {
-                    fieldsWithoutGrass.add(field);
+                    fieldsWithoutGrassSet.add(field);
                 }
             }
         }
-        return fieldsWithoutGrass;
+        return fieldsWithoutGrassSet;
     }
+
 
     @Override
     public List<WorldElement> getElements(){
@@ -108,5 +115,9 @@ public class EarthMap extends AbstractWorldMap {
     @Override
     public Boundary getCurrentBounds() {
         return finalBoundary;
+    }
+
+    public Set<Vector2d> getFieldsWithoutGrass() {
+        return fieldsWithoutGrass;
     }
 }

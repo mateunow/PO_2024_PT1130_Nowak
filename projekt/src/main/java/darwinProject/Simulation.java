@@ -4,31 +4,35 @@ import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.Vector2d;
 import darwinProject.exceptions.IncorrectPositionException;
+import darwinProject.model.maps.EarthMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Simulation implements Runnable
 {
     private final List<Animal> animals;
     private final List<Vector2d> animalsPositions;
     private final AbstractWorldMap world;
-    private final Integer numberOfGenes;
-    private final Integer startingEnergy;
+    private Random random = new Random();
+    private final Integer initialNumberOfAnimals;
 
 
-    public Simulation(List<Vector2d> positions, AbstractWorldMap world, Integer numberOfGenes, Integer startingEnergy) {
-        //TODO delete positions list, replace with number of initial animals
-        this.world = world;
-        this.numberOfGenes = numberOfGenes;
-        this.startingEnergy = startingEnergy;
+    public Simulation(Integer mapHeight, Integer mapWidth, Integer startingGrassCount,
+                      Integer energyFromEatingPlants, Integer numberOfPlantsGrownDaily, Integer initialNumberOfAnimals,
+            Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy) {
+        //TODO add number of grasses to add each day
+        //TODO add animal variant (crazy/normal animal)
+        this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
         this.animals = new ArrayList<>();
         this.animalsPositions = new ArrayList<>();
+        this.initialNumberOfAnimals = initialNumberOfAnimals;
 
-
-        for (Vector2d position : positions) {
+        for (int i=0; i<initialNumberOfAnimals; i++) {
             try {
-                Animal animal = new Animal(position, numberOfGenes, startingEnergy);
+                Vector2d position = new Vector2d(random.nextInt(mapWidth), random.nextInt(mapHeight));
+                Animal animal = new Animal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
                 world.place(animal);
                 this.animals.add(animal);
                 this.animalsPositions.add(position);
@@ -41,15 +45,8 @@ public class Simulation implements Runnable
 }
 
     public void run(){
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        try i catch w celu poczekania na wyświetlenie początkowej mapy zanim
-//        pierwsze zwierze zrobi ruch
 
-        int animalsCount = animals.size();
+        int animalsCount = initialNumberOfAnimals;
         boolean running = true;
         while (running) {
 
@@ -61,14 +58,13 @@ public class Simulation implements Runnable
                 //TODO eat
             }
             for (Animal animal: animals) {
-
             }
-            world.generateNewGrassPositions(5);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            world.generateNewGrassPositions();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
             }

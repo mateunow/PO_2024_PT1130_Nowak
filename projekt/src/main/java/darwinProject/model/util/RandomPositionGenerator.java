@@ -28,9 +28,14 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
         generateGrassPositions(positions, numberOfGrassFieldsToAdd);
     }
     public void generateGrassPositions(List<Vector2d> positions, Integer grassCount) {
+        if (positions.size() < grassCount) {
+            positions.addAll(positions);
+        }
+        else{
         Collections.shuffle(positions);
         for (int i = 0; i < grassCount; i++) {
             positions.add(positions.get(i));
+        }
         }
     }
 
