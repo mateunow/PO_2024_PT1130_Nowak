@@ -6,6 +6,8 @@ import darwinProject.model.maps.EarthMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -115,5 +117,4 @@ class AnimalTest {
     @Test
     void move() {
     }
-
 }

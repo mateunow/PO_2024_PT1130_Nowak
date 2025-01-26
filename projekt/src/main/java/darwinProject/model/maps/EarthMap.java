@@ -34,6 +34,7 @@ public class EarthMap extends AbstractWorldMap {
         this.energyFromEatingPlant = energyFromEatingPlant;
     }
 
+
     @Override
     public boolean canMoveTo(Vector2d position) {
         return position.precedes(upperRight) && position.follows(lowerLeft);
@@ -42,16 +43,32 @@ public class EarthMap extends AbstractWorldMap {
     }
 
     @Override
-    public void eatPlants(List<Animal> list) {
+    public void eatPlants() {
+        if (!animals.isEmpty()){
+        Map<Vector2d, List<Animal>> animalsGroupedByPosition = groupAnimalsByPosition();
 
+        for (Map.Entry<Vector2d, List<Animal>> entry : animalsGroupedByPosition.entrySet()) {
+            Vector2d position = entry.getKey();
+            List<Animal> animals = entry.getValue();
+            Grass grass = grassMap.get(position);
+
+            if (grass != null) {
+                animals.sort(animalPriorityComparator);
+                Animal topAnimal = animals.getFirst();
+                topAnimal.addEnergy(energyFromEatingPlant);
+                grassMap.remove(position);
+                fieldsWithoutGrass.add(position);
+            }
+        }
+        }
     }
+
 
 
     @Override
     public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
         MapDirection currentDirection = animal.getDirection();
-
         animal.move( this);
         Vector2d animalNewPosition = animal.getPosition();
         if (grassMap.containsKey(animalNewPosition)) {
@@ -103,8 +120,6 @@ public class EarthMap extends AbstractWorldMap {
         }
         return fieldsWithoutGrassSet;
     }
-
-
     @Override
     public List<WorldElement> getElements(){
         List<WorldElement> worldElements = super.getElements();
@@ -115,9 +130,5 @@ public class EarthMap extends AbstractWorldMap {
     @Override
     public Boundary getCurrentBounds() {
         return finalBoundary;
-    }
-
-    public Set<Vector2d> getFieldsWithoutGrass() {
-        return fieldsWithoutGrass;
     }
 }

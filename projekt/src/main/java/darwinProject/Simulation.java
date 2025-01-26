@@ -15,7 +15,7 @@ public class Simulation implements Runnable
     private final List<Animal> animals;
     private final List<Vector2d> animalsPositions;
     private final AbstractWorldMap world;
-    private Random random = new Random();
+    private final Random random = new Random();
     private final Integer initialNumberOfAnimals;
 
 
@@ -48,31 +48,25 @@ public class Simulation implements Runnable
 
         int animalsCount = initialNumberOfAnimals;
         boolean running = true;
+        int i = 0;
         while (running) {
+            System.out.println("day " + i);
+            i++;
+//TODO dodaj warunek zakończenia pętli
+//            for (int i = 0; i < animalsCount; i++) {
+//                world.move(animals.get(i));
+//                System.out.println(animals.get(i).getEnergy());
+//            world.moveAllAnimals();
+            world.eatPlants();
 
-            for (int i = 0; i < animalsCount; i++) {
-                //TODO zmień warunek zakończenia tej pętli i thread do move animala
-                world.move(animals.get(i));
-            for (Vector2d position : animalsPositions) {
-
-                //TODO eat
-            }
-            for (Animal animal: animals) {
-            }
             world.generateNewGrassPositions();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
 
             }
-            System.out.println(world);
         }
     }
-
-    public List<Animal> getAnimals() {
-        return List.copyOf(animals);
-    }
-}

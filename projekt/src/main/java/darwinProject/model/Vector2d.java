@@ -45,8 +45,9 @@ public class Vector2d {
     }
     @Override
     public int hashCode() {
-        return 31 * x + y;
+        return 213 * x + y^ (y >>> 16);
     }
+
     public int getX(){
         return x;
     }

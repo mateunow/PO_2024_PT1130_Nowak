@@ -20,7 +20,6 @@ public class SimulationApp extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
         SimulationPresenter presenter = loader.getController();
-//        AbstractWorldMap map = new RectangularMap(10, 10);
         AbstractWorldMap map = new EarthMap(100,100,10, 2, 20); //TODO change this
         map.registerObservers(presenter);
         List<Vector2d> initialPositions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));

@@ -1,6 +1,5 @@
 package darwinProject.model.maps;
 
-import darwinProject.enums.MapDirection;
 import darwinProject.model.*;
 import darwinProject.model.util.Boundary;
 import darwinProject.exceptions.IncorrectPositionException;
@@ -11,8 +10,12 @@ import java.util.*;
 public abstract class AbstractWorldMap implements WorldMap {
     protected final MapVisualizer mapVisualizer = new MapVisualizer(this);
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
+
+
     private final HashSet<MapChangeListener> observers = new HashSet<>();
     protected final int id = this.hashCode();
+    protected final Set<Animal> deadAnimals = new HashSet<>();
+
 
 
     public final void registerObservers(MapChangeListener observer) {
@@ -28,36 +31,46 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
-    @Override
-    public void move(Animal animal) {
-        Vector2d currentPosition = animal.getPosition();
-        MapDirection currentDirection = animal.getDirection();
+    protected Map<Vector2d, List<Animal>> groupAnimalsByPosition() {
+        Map<Vector2d, List<Animal>> grouped = new HashMap<>();
 
-        animal.move( this);
-        animals.remove(currentPosition);
-        animals.put(animal.getPosition(), animal);
+        for (Map.Entry<Vector2d, Animal> entry : animals.entrySet()) {
+            Vector2d position = entry.getKey(); // Position is the key in the map
+            Animal animal = entry.getValue();  // Animal is the value
 
-        if (!animal.getPosition().equals(currentPosition)) {
-            notifyObservers("Animal moved from " + currentPosition + " to " + animal.getPosition());
+            // Add the animal to the list for this position
+            grouped.computeIfAbsent(position, k -> new ArrayList<>()).add(animal);
         }
-        if (!animal.getDirection().equals(currentDirection)) {
-            notifyObservers("Animal turned from " + currentDirection + " to " + animal.getDirection());
-        }
+
+        return grouped;
     }
 
+    Comparator<Animal> animalPriorityComparator = (a1, a2) -> {
+        if (a1.getEnergy() != a2.getEnergy()) {
+            return Integer.compare(a2.getEnergy(), a1.getEnergy());
+        } else if (a1.getAge() != a2.getAge()) {
+            return Integer.compare(a2.getAge(), a1.getAge());
+        } else if (a1.getChildrenCount() != a2.getChildrenCount()) {
+            return Integer.compare(a2.getChildrenCount(), a1.getChildrenCount());
+        } else {
+            return new Random().nextInt(2) * 2 - 1; // Randomly return -1 or 1
+        }
+    };
+
+
+    public abstract void move(Animal animal) ;
+
+
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        return !(objectAt(position) instanceof Animal);
-    }
+    public abstract boolean canMoveTo(Vector2d position);
 
     @Override
     public boolean isOccupied(Vector2d position) {
         return objectAt(position) != null;
     }
 
-    @Override
-    public void place(Animal animal) throws IncorrectPositionException{
+    public void place(Animal animal) throws IncorrectPositionException {
         Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
             animals.put(position, animal);
@@ -66,7 +79,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         else {
         throw new IncorrectPositionException(position);
     }}
-    public abstract void eatPlants(List<Animal> list);
+    public abstract void eatPlants();
     public Set<Vector2d> findFieldsWithoutGrass() {
         Set<Vector2d> positions = new HashSet<>();
         Boundary boundary = getCurrentBounds();
@@ -88,8 +101,14 @@ public abstract class AbstractWorldMap implements WorldMap {
         return animals.get(position);
     }
 
-    public List<WorldElement> getElements(){
-        return new ArrayList<>(animals.values());
+    public List<WorldElement> getElements() {
+        List<WorldElement> elements = new ArrayList<>();
+        // Iterate over each entry in the animals map
+        for (Animal animal : animals.values()) {
+            // Add all animals from the SortedSet to the list
+            elements.add(animal);
+        }
+        return elements;
     }
 
 

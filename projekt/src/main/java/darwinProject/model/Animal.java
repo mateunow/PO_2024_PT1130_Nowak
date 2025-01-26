@@ -80,6 +80,10 @@ public class Animal implements WorldElement {
 
 
     public void move(WorldMap map) {
+        this.energy -= 20;
+        if (isDead()) {
+            this.die();
+        }
         Vector2d potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
 
         Boundary boundary = map.getCurrentBounds();
@@ -144,7 +148,7 @@ public class Animal implements WorldElement {
 
         // Apply mutations to some genes in the new genome
         int genomeSize = newGenome.size();
-        int numMutations = rand.nextInt(genomeSize + 1);
+        int numMutations = rand.nextInt(maxNumberOfMutations-minNumberOfMutations) + minNumberOfMutations;
         for (int i = 0; i < numMutations; i++) {
             int geneIndex = rand.nextInt(genomeSize);
             int newGeneValue = rand.nextInt(maxGene + 1);
@@ -178,6 +182,9 @@ public class Animal implements WorldElement {
     public void die() {
         this.dayOfDeath = this.daysLived;
     }
+    public boolean isDead() {
+        return (this.energy <= 0);
+    }
 
     public final List<Integer> getGenome() {
         return new ArrayList<>(this.genome);
@@ -190,5 +197,12 @@ public class Animal implements WorldElement {
     }
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
+    }
+    public int getAge(){
+        return this.daysLived;
+    }
+    @Override
+    public int hashCode() {
+        return (31 * getEnergy() * getAge());
     }
 }

@@ -86,4 +86,12 @@ class EarthMapTest {
         assertEquals(animal1, grassField.objectAt(new Vector2d(30,11)));
     }
 
+    @Test
+    public void testFightingForGrass() {
+        EarthMap earthMap = new EarthMap(1, 1, 1,0,20);
+        Vector2d position = new Vector2d(0, 0);
+        Animal animal0 = new Animal(position, 7, 50, 30, 20, 0, 3);
+        Animal animal1 = new Animal(position, 7, 70, 30, 20, 0, 3);
+    }
+
 }
